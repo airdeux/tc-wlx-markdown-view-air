@@ -1,0 +1,14 @@
+LIBRARY TcWlxMarkdownViewAir
+EXPORTS
+  ListLoad
+  ListLoadW
+  ListLoadNext
+  ListLoadNextW
+  ListCloseWindow
+  ListGetDetectString
+  ListSearchText
+  ListSearchTextW
+  ListSendCommand
+  ListPrint
+  ListPrintW
+  ListSetDefaultParams

@@ -1,0 +1,23 @@
+# build output
+build/
+build-x86/
+build-x64/
+bin/
+out/
+.vs/
+*.o
+*.obj
+*.res
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.wlx
+*.wlx64
+*.exe
+*.zip
+
+# test by-products (make test)
+tests/*.md.html
+tests/*.md.rtf
+tests/*.md.pdf

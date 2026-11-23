@@ -1,0 +1,5 @@
+[plugininstall]
+description=TcWlxMarkdownViewAir - Markdown viewer: formatted preview / source (Ctrl+M), F1 = help
+type=wlx
+file=TcWlxMarkdownViewAir.wlx
+defaultdir=TcWlxMarkdownViewAir

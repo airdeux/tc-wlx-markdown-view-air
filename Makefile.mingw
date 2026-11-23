@@ -1,0 +1,35 @@
+# Cross-build with MinGW-w64 (Linux/MSYS2):  make -f Makefile.mingw        -> build/TcWlxMarkdownViewAir.wlx + .wlx64
+# plugin file name (also the default TC install directory, see pluginst.inf)
+NAME = TcWlxMarkdownViewAir
+
+SRC = src/listplug.cpp src/lister.cpp src/richedit_view.cpp src/text_load.cpp \
+      src/md_parser.cpp src/md_rtf.cpp src/md_html.cpp
+CXXFLAGS = -std=c++17 -O2 -Wall -Wextra -DUNICODE -D_UNICODE -DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0601 \
+           -ffunction-sections -fdata-sections
+LDFLAGS  = -shared -static -static-libgcc -static-libstdc++ -s -Wl,--gc-sections -Wl,--enable-stdcall-fixup
+LIBS     = -lcomdlg32 -lshell32 -lgdi32 -luser32 -lkernel32
+
+all: build/$(NAME).wlx build/$(NAME).wlx64
+
+RC_DEPS = src/MarkdownView.rc src/resource.h README.md
+
+build/res32.o: $(RC_DEPS)
+	@mkdir -p build
+	i686-w64-mingw32-windres -I. -Isrc -O coff -o $@ src/MarkdownView.rc
+
+build/res64.o: $(RC_DEPS)
+	@mkdir -p build
+	x86_64-w64-mingw32-windres -I. -Isrc -O coff -o $@ src/MarkdownView.rc
+
+build/$(NAME).wlx: $(SRC) src/*.h src/listplug.def build/res32.o
+	i686-w64-mingw32-g++ $(CXXFLAGS) -o $@ $(SRC) build/res32.o src/listplug.def $(LDFLAGS) -Wl,--kill-at $(LIBS)
+
+build/$(NAME).wlx64: $(SRC) src/*.h src/listplug.def build/res64.o
+	x86_64-w64-mingw32-g++ $(CXXFLAGS) -o $@ $(SRC) build/res64.o src/listplug.def $(LDFLAGS) $(LIBS)
+
+test:
+	g++ -std=c++17 -Wall -Wextra -O1 -o build/test_md tests/test_md.cpp src/md_parser.cpp src/md_rtf.cpp src/md_html.cpp
+	./build/test_md tests/sample.md
+
+clean:
+	rm -rf build
